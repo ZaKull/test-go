@@ -8,6 +8,7 @@ import (
 	"os/exec"
 )
 
+//a
 func handler(w http.ResponseWriter, r *http.Request) {
 	cmd := exec.CommandContext(r.Context(), "/bin/sh", "script.sh")
 	cmd.Stderr = os.Stderr
