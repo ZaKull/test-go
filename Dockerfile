@@ -2,7 +2,7 @@ FROM golang:1.11
 
 WORKDIR /go/src/invoke
 
-COPY invoke.go .
+COPY main.go .
 RUN go install -v
 
 COPY . .
