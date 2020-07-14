@@ -2,19 +2,29 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
+	"os/exec"
 )
 
-// comentasdasda
 func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "<html><head><title>Cloud Run Demo</title></head><body><h1>Greetings from Cloud Run !!!</h1></body></html>\n")
+	cmd := exec.CommandContext(r.Context(), "/bin/sh", "script.sh")
+	cmd.Stderr = os.Stderr
+	out, err := cmd.Output()
+	if err != nil {
+		w.WriteHeader(500)
+	}
+	w.Write(out)
 }
+
 func main() {
+	http.HandleFunc("/", handler)
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
-	http.HandleFunc("/", handler)
-	http.ListenAndServe(":"+port, nil)
+
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), nil))
 }
